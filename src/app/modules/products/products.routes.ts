@@ -14,5 +14,9 @@ router.get('/',
     ProductController.getProducts
 )
 
+router.get('/:id',
+    ProductController.getSingleProducts
+)
+
 
 export const ProductRoutes = router

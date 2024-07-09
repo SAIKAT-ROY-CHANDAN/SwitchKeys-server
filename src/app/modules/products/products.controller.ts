@@ -22,8 +22,19 @@ const getProducts = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
+const getSingleProducts = catchAsync(async (req: Request, res: Response) => {
+    const result = await ProductServices.getSingleProductsFromDB(req.params.id)
+
+    res.status(200).json({
+        success: true,
+        message: 'Products fetched successfully',
+        data: result
+    })
+})
+
 
 export const ProductController = {
     createProducts,
-    getProducts
+    getProducts,
+    getSingleProducts
 }

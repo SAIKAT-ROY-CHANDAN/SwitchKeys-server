@@ -9,8 +9,11 @@ const addToCartValidationSchema = z.object({
         brandImg: z.string(),
         quantity: z.number(),
         price: z.number(),
-        rating: z.number(),
+        rating: z.number().optional(),
         desc: z.string(),
+        orderCount: z.number(),
+        inStock: z.boolean().optional(),
+        isPurchased: z.boolean().optional(),
         isDeleted: z.boolean().optional()
     })
 })

@@ -7,5 +7,6 @@ export type TProducts = {
     price: number,
     rating: number,
     desc: string,
-    isDeleted: boolean
+    isDeleted: boolean,
+    isStock: boolean
 }

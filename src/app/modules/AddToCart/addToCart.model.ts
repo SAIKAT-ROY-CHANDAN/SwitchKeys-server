@@ -14,6 +14,9 @@ export const addToCartSchema = new Schema<TAddCart>({
     price: { type: Number, required: true },
     rating: { type: Number, required: true },
     desc: { type: String, required: true },
+    totalPrice: { type: Number },
+    orderCount: { type: Number, required: true },
+    inStock: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },
     isPurchased: { type: Boolean, default: false }
 })

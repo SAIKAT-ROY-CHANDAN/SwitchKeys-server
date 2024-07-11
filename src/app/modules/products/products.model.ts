@@ -13,7 +13,8 @@ export const productSchema = new Schema<TProducts>({
     price: { type: Number, required: true },
     rating: { type: Number, required: true },
     desc: { type: String, required: true },
-    isDeleted: { type: Boolean, default: false }
+    isDeleted: { type: Boolean, default: false },
+    isStock: {type: Boolean, default: true}
 })
 
 export const Product = model<TProducts>("Product", productSchema)

@@ -10,7 +10,8 @@ const productValidationSchema = z.object({
         price: z.number(),
         rating: z.number(),
         desc: z.string(),
-        isDeleted: z.boolean().optional()
+        isDeleted: z.boolean().optional(),
+        isStock: z.boolean().optional()
     })
 });
 

@@ -8,5 +8,5 @@ export type TProducts = {
     rating: number,
     desc: string,
     isDeleted: boolean,
-    isStock: boolean
+    inStock: boolean
 }

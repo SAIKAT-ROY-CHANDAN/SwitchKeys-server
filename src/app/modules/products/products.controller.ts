@@ -13,7 +13,7 @@ const createProducts = catchAsync(async (req: Request, res: Response) => {
 })
 
 const getProducts = catchAsync(async (req: Request, res: Response) => {
-    const result = await ProductServices.getProductsFromDB()
+    const result = await ProductServices.getProductsFromDB(req.query)
 
     res.status(200).json({
         success: true,

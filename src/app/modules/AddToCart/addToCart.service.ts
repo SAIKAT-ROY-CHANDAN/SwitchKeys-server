@@ -20,7 +20,7 @@ const createAddToCartIntoDB = async (payload: TAddCart) => {
 
     const availableQuantity = product.quantity;
 
-    if (availableQuantity < orderCount && availableQuantity === 0) {
+    if (availableQuantity < orderCount) {
         new AppError(httpStatus.INSUFFICIENT_STORAGE, "Quantity is insufficient");
     }
 
@@ -33,16 +33,36 @@ const createAddToCartIntoDB = async (payload: TAddCart) => {
     }, { new: true })
 
     if (!updatedProduct) {
-        new AppError(httpStatus.NO_CONTENT, 'Failed to update product')
+        new AppError(404, 'Failed to update product')
     }
 
-    const addToCartPayload = {
-        ...payload,
-        totalPrice,
-        quantity: remainingQuantity,
-    };
 
-    const result = await AddToCart.create(addToCartPayload);
+    const cartItem = await AddToCart.findOne({ productId });
+
+    let result;
+
+    if (cartItem) {
+        result = await AddToCart.findOneAndUpdate(
+            { productId },
+            {
+                $inc: { orderCount: 1 },
+                $set: {
+                    totalPrice: (cartItem.orderCount + 1) * price,
+                    quantity: remainingQuantity
+                }
+            },
+            { new: true }
+        )
+
+    } else {
+        const addToCartPayload = {
+            ...payload,
+            totalPrice,
+            quantity: remainingQuantity,
+        };
+        result = await AddToCart.create(addToCartPayload);
+    }
+
     return result
 }
 

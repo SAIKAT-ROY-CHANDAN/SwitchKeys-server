@@ -8,15 +8,21 @@ const createProductIntoDB = async (payload: TProducts) => {
 }
 
 const getProductsFromDB = async (query: any) => {
-    const { search, sort } = query
+    const { search, sort, minPrice, maxPrice } = query
 
     const searchQuery: any = {};
-    console.log(searchQuery);
+    
     if (search) {
         searchQuery.$or = [
             { title: { $regex: search, $options: 'i' } },
             { brand: { $regex: search, $options: 'i' } },
         ]
+    }
+
+    if (minPrice || maxPrice) {
+        searchQuery.price = {};
+        if (minPrice) searchQuery.price.$gte = parseFloat(minPrice);
+        if (maxPrice) searchQuery.price.$lte = parseFloat(maxPrice);
     }
 
     const sortQuery: any = {};

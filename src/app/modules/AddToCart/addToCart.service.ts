@@ -71,7 +71,17 @@ const getAddToCartFromDB = async () => {
     return result
 }
 
+const deleteCartFromDB = async (id: string) => {
+    const result = await AddToCart.findByIdAndDelete(id)
+    if (!result) {
+        new AppError(httpStatus.NOT_FOUND, `Item with id ${id} not found`)
+    }
+
+    return result
+}
+
 export const AddCartServices = {
     createAddToCartIntoDB,
-    getAddToCartFromDB
+    getAddToCartFromDB,
+    deleteCartFromDB
 }

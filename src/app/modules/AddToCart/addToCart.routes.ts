@@ -16,4 +16,8 @@ router.get('/',
     AddCartController.getCart
 )
 
+router.delete('/delete/:id',
+    AddCartController.deleteCart
+)
+
 export const AddToCartRoutes = router

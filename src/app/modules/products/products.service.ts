@@ -11,7 +11,7 @@ const getProductsFromDB = async (query: any) => {
     const { search, sort, minPrice, maxPrice } = query
 
     const searchQuery: any = {};
-    
+
     if (search) {
         searchQuery.$or = [
             { title: { $regex: search, $options: 'i' } },
@@ -28,9 +28,9 @@ const getProductsFromDB = async (query: any) => {
     const sortQuery: any = {};
     if (sort) {
         if (sort === "low to high") {
-            sortQuery.price = 1; 
+            sortQuery.price = 1;
         } else if (sort === "high to low") {
-            sortQuery.price = -1; 
+            sortQuery.price = -1;
         }
     }
 
@@ -39,15 +39,24 @@ const getProductsFromDB = async (query: any) => {
     return result
 }
 
-
-
 const getSingleProductsFromDB = async (id: string) => {
     const result = await Product.findOne({ _id: id })
     return result
 }
 
+const updateProductFromDB = async (id: string, payload: Partial<TProducts>) => {
+    const updatedProduct = await Product.findByIdAndUpdate(id, payload, { new: true, runValidators: true });
+
+    if (!updatedProduct) {
+        throw new Error('Product not found');
+    }
+    
+    return updatedProduct;
+}
+
 export const ProductServices = {
     createProductIntoDB,
     getProductsFromDB,
-    getSingleProductsFromDB
+    getSingleProductsFromDB,
+    updateProductFromDB
 }

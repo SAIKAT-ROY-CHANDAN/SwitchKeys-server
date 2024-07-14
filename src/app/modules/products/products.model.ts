@@ -11,10 +11,10 @@ export const productSchema = new Schema<TProducts>({
     brandImg: { type: String, required: true },
     quantity: { type: Number, required: true },
     price: { type: Number, required: true },
-    rating: { type: Number, required: true },
+    rating: { type: Number },
     desc: { type: String, required: true },
     isDeleted: { type: Boolean, default: false },
-    inStock: {type: Boolean, default: true}
+    inStock: { type: Boolean, default: true }
 })
 
 export const Product = model<TProducts>("Product", productSchema)

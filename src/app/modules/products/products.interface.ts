@@ -5,8 +5,8 @@ export type TProducts = {
     brandImg: string,
     quantity: number,
     price: number,
-    rating: number,
+    rating?: number,
     desc: string,
-    isDeleted: boolean,
-    inStock: boolean
+    isDeleted?: boolean,
+    inStock?: boolean
 }

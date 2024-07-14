@@ -18,5 +18,10 @@ router.get('/:id',
     ProductController.getSingleProducts
 )
 
+router.post('/:id',
+    validateRequest(productValidation.productUpdateValidationSchema),
+    ProductController.updateProducts
+)
+
 
 export const ProductRoutes = router

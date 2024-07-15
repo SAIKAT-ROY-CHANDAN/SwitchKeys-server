@@ -23,5 +23,9 @@ router.post('/:id',
     ProductController.updateProducts
 )
 
+router.delete('/:id',
+    ProductController.deleteProducts
+)
+
 
 export const ProductRoutes = router

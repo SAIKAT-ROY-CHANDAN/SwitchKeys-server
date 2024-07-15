@@ -18,7 +18,8 @@ const getProducts = catchAsync(async (req: Request, res: Response) => {
     res.status(200).json({
         success: true,
         message: 'Products fetched successfully',
-        data: result
+        data: result.result,
+        pagination: result.pagination
     })
 })
 
@@ -32,7 +33,7 @@ const getSingleProducts = catchAsync(async (req: Request, res: Response) => {
     })
 })
 
-const updateProducts = catchAsync(async(req: Request, res: Response) => {
+const updateProducts = catchAsync(async (req: Request, res: Response) => {
     const result = await ProductServices.updateProductFromDB(req.params.id, req.body)
 
     res.status(200).json({
@@ -42,10 +43,21 @@ const updateProducts = catchAsync(async(req: Request, res: Response) => {
     })
 })
 
+const deleteProducts = catchAsync(async (req: Request, res: Response) => {
+    const { id } = req.params
+    await ProductServices.deleteProductFromDB(id)
+
+    res.status(200).json({
+        success: true,
+        message: 'Products deleted successfully',
+    })
+})
+
 
 export const ProductController = {
     createProducts,
     getProducts,
     getSingleProducts,
-    updateProducts
+    updateProducts,
+    deleteProducts
 }

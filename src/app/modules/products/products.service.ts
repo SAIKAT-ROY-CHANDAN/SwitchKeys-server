@@ -8,9 +8,9 @@ const createProductIntoDB = async (payload: TProducts) => {
 }
 
 const getProductsFromDB = async (query: any) => {
-    const { search, sort, minPrice, maxPrice } = query
+    const { search, sort, minPrice, maxPrice, page = 1, limit = 10 } = query
 
-    const searchQuery: any = {};
+    const searchQuery: any = { isDeleted: false };
 
     if (search) {
         searchQuery.$or = [
@@ -34,9 +34,25 @@ const getProductsFromDB = async (query: any) => {
         }
     }
 
+    const skip = (page - 1) * limit;
+    const totalItems = await Product.countDocuments(searchQuery);
+    const totalPages = Math.ceil(totalItems / limit);
 
-    const result = await Product.find(searchQuery).sort(sortQuery)
-    return result
+
+    const result = await Product.find(searchQuery)
+        .sort(sortQuery)
+        .skip(skip)
+        .limit(limit)
+
+    return {
+        result,
+        pagination: {
+            totalItems,
+            totalPages,
+            currentPage: page,
+            itemsPerPage: limit,
+        },
+    }
 }
 
 const getSingleProductsFromDB = async (id: string) => {
@@ -50,13 +66,24 @@ const updateProductFromDB = async (id: string, payload: Partial<TProducts>) => {
     if (!updatedProduct) {
         throw new Error('Product not found');
     }
-    
+
     return updatedProduct;
+}
+
+const deleteProductFromDB = async (id: string) => {
+    const result = await Product.findByIdAndUpdate(
+        id,
+        { isDeleted: true },
+        { new: true }
+    );
+
+    return result
 }
 
 export const ProductServices = {
     createProductIntoDB,
     getProductsFromDB,
     getSingleProductsFromDB,
-    updateProductFromDB
+    updateProductFromDB,
+    deleteProductFromDB
 }

@@ -84,8 +84,10 @@ const createPaymentSession = async (userInfo: any, orders: Record<string, Order>
         payment_method_types: ['card'],
         line_items: lineItems,
         mode: 'payment',
-        success_url: `http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `http://localhost:5173/cancel`,
+        success_url: `https://switch-keys.vercel.app/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `https://switch-keys.vercel.app/cancel`,
+        // success_url: `http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}`,
+        // cancel_url: `http://localhost:5173/cancel`,
         metadata: {
             email: userInfo.email,
             name: `${userInfo.firstname} ${userInfo.lastname}`,

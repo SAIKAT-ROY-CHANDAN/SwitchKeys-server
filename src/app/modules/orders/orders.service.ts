@@ -4,7 +4,7 @@ import { AddToCart } from "../AddToCart/addToCart.model";
 import { Product } from "../products/products.model";
 import { IUser } from "./orders.interface"
 import { UserOrder } from "./orders.model"
-const stripe = new Stripe('sk_test_51PPPOB03ojnMmocN9MM4BO3gGWrdXXvW0otpruiFad9tBmSrrCwgEhWPP7XeEgE61uygsZOYlkdlkG2KpwbzUZI600Gx4c77vA');
+const stripe = new Stripe(process.env.STRIPE_SECRECT_KEY as string);
 
 interface Order {
     cartId: string;

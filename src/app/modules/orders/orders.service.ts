@@ -1,11 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Stripe } from "stripe";
 import { AddToCart } from "../AddToCart/addToCart.model";
 import { Product } from "../products/products.model";
 import { IUser } from "./orders.interface"
 import { UserOrder } from "./orders.model"
+const stripe = new Stripe('sk_test_51PPPOB03ojnMmocN9MM4BO3gGWrdXXvW0otpruiFad9tBmSrrCwgEhWPP7XeEgE61uygsZOYlkdlkG2KpwbzUZI600Gx4c77vA');
+
+interface Order {
+    cartId: string;
+    counter: number;
+    quantity: number;
+    price: number;
+    orderCount: number;
+    productId: string;
+}
+
 
 const createOrderIntoDB = async (payload: IUser) => {
-    const { orders} = payload;
+    const { orders } = payload;
 
     const results = [];
 
@@ -36,7 +48,7 @@ const createOrderIntoDB = async (payload: IUser) => {
 
             const result = await UserOrder.create(payload);
 
-            results.push(result); 
+            results.push(result);
 
         } catch (error: any) {
             console.error(`Error processing order ${orderId}:`, error.message);
@@ -46,6 +58,67 @@ const createOrderIntoDB = async (payload: IUser) => {
 
 }
 
+
+const createLineItems = (orders: Record<string, Order>) => {
+    return Object.values(orders).map((order: Order) => {
+        const totalItems = order.orderCount;
+
+        return {
+            price_data: {
+                currency: 'usd',
+                product_data: {
+                    name: `Product ${order.productId}`,
+                },
+                unit_amount: Math.round(order.price * 100),
+            },
+            quantity: totalItems,
+        };
+    });
+}
+
+
+const createPaymentSession = async (userInfo: any, orders: Record<string, Order>) => {
+    const lineItems = createLineItems(orders);
+
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: lineItems,
+        mode: 'payment',
+        success_url: `http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `http://localhost:5173/cancel`,
+        metadata: {
+            email: userInfo.email,
+            name: `${userInfo.firstname} ${userInfo.lastname}`,
+            address: userInfo.address,
+        },
+    });
+
+    return session;
+};
+
+
+export const verifyPaymentService = async (session_id: string) => {
+    try {
+        const session = await stripe.checkout.sessions.retrieve(session_id);
+
+        if (session.payment_status === 'paid') {
+            return {
+                success: true,
+            };
+        } else {
+            return { success: false };
+        }
+
+    } catch (error) {
+        console.error('Error in verifying payment:', error);
+        throw new Error('Error verifying payment');
+    }
+};
+
+
+
 export const OrderServices = {
-    createOrderIntoDB
+    createOrderIntoDB,
+    createPaymentSession,
+    verifyPaymentService
 }

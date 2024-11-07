@@ -1,11 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import dotenv from 'dotenv';
 import { Stripe } from "stripe";
 import { AddToCart } from "../AddToCart/addToCart.model";
 import { Product } from "../products/products.model";
 import { IUser } from "./orders.interface"
 import { UserOrder } from "./orders.model"
 
-const stripe = new Stripe(`${process.env.STRIPE_SECRET_KEY}`);
+dotenv.config()
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+// const stripe = new Stripe(`sk_test_51PPPOB03ojnMmocN9MM4BO3gGWrdXXvW0otpruiFad9tBmSrrCwgEhWPP7XeEgE61uygsZOYlkdlkG2KpwbzUZI600Gx4c77vA`);
 
 interface Order {
     cartId: string;
